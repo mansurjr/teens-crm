@@ -13,7 +13,7 @@ export class TelegramClientService implements OnModuleInit {
   constructor() {
     const apiId = Number(process.env.API_ID);
     const apiHash = process.env.API_HASH;
-    const sessionString = process.env.API_SESSION;
+    const sessionString = process.env.API_SESSION ;
 
     if (!apiId || !apiHash || !sessionString) {
       throw new Error(
