@@ -12,8 +12,13 @@ export class StudentService {
 
   async findAll(n?: number) {
     const students = await this.prisma.base_student.findMany({
-      include: {
-        base_medals: true,
+      select: {
+        base_medals: {
+          select: { id: true, count: true, medal_type: true, student_id: true },
+        },
+        id: true,
+        name: true,
+        surname: true,
       },
     });
 
@@ -26,7 +31,6 @@ export class StudentService {
       return {
         ...student,
         id: student.id.toString(),
-        group_id: student.group_id.toString(),
         base_medals: student.base_medals.map((medal) => ({
           ...medal,
           id: medal.id.toString(),
@@ -52,7 +56,14 @@ export class StudentService {
   async findOne(id: number) {
     const student = await this.prisma.base_student.findUnique({
       where: { id: BigInt(id) },
-      include: { base_medals: true },
+      select: {
+        base_medals: {
+          select: { id: true, count: true, medal_type: true, student_id: true },
+        },
+        id: true,
+        name: true,
+        surname: true,
+      },
     });
 
     if (!student) {
@@ -62,7 +73,6 @@ export class StudentService {
     return {
       ...student,
       id: student.id.toString(),
-      group_id: student.group_id.toString(),
       base_medals: student.base_medals.map((medal) => ({
         ...medal,
         id: medal.id.toString(),
