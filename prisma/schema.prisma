@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model base_student {
+  id        BigInt  @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  password  String? @db.VarChar(255)
+  surname   String  @db.VarChar(255)
+  unique_id String? @unique @db.VarChar(6)
+  group_id  BigInt
+
+  base_medals base_medals[]
+
+  @@index([group_id])
+}
+
+model base_medals {
+  id         BigInt @id @default(autoincrement())
+  medal_type String @db.VarChar(10)
+  student_id BigInt
+  count      Int
+
+  base_student base_student @relation(fields: [student_id], references: [id])
+
+  @@index([medal_type])
+  @@index([student_id])
+}
+
+model shop_item {
+  id         BigInt @id @default(autoincrement())
+  name       String @db.VarChar(255)
+  stock      Int
+  medal_type String @db.VarChar(10)
+  price      Int
+  image_url  String? @db.VarChar(255)
+
+  @@index([medal_type])
+}
